@@ -22,22 +22,70 @@
           </th>
           <td>{{ host.name }}</td>
           <td>{{ host.type }}</td>
-          <td><button type="button" class="btn">Import</button></td>
+          <td>
+            <button
+              type="button"
+              class="btn"
+              data-bs-toggle="modal"
+              data-bs-target="#importModal"
+              @click="modalHosts = [host.id]"
+            >
+              Import
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
     <div class="position-fixed bottom-0 start-0 end-0 m-auto p-5">
-      <button type="button" class="btn">Import all selected</button>
+      <button
+        type="button"
+        class="btn"
+        data-bs-toggle="modal"
+        data-bs-target="#importModal"
+        @click="modalHosts = checked"
+      >
+        Import all selected
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="importModal"
+    tabindex="-1"
+    aria-labelledby="importModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="importModalLabel">Import</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <ImportModalContent :hosts="modalHosts" />
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn">DO IMPORT</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import ImportModalContent from "@/components/ImportModalContent.vue"; // @ is an alias to /src
 
 export default defineComponent({
   name: "Imports",
-  components: {},
+  components: { ImportModalContent },
   data() {
     const hosts = [
       {
@@ -61,6 +109,7 @@ export default defineComponent({
       checkedAll: false,
       checked,
       hosts,
+      modalHosts: [],
     };
   },
   methods: {
@@ -73,10 +122,6 @@ export default defineComponent({
     },
   },
 });
-
-function checkAll() {
-  console.log("hola");
-}
 </script>
 
 <style>
