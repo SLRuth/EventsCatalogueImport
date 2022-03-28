@@ -1,9 +1,19 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <ul class="nav">
+      <li class="nav-item px-2">
+        <router-link to="/" class="nav-link py-2 px-3">
+          Import hosts
+        </router-link>
+      </li>
+      <li class="nav-item px-2">
+        <router-link to="/entities" class="nav-link py-2 px-3">
+          Imported entities
+        </router-link>
+      </li>
+    </ul>
   </div>
-  <router-view/>
+  <router-view />
 </template>
 
 <style>
@@ -21,10 +31,15 @@
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #ff6e0b;
+  border-radius: 5px 5px 0px 0px;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: white;
+  background-color: #ff6e0b;
+}
+.nav {
+  border-bottom: 1px solid #ff6e0b;
 }
 </style>
