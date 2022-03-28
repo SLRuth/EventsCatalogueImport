@@ -57,24 +57,8 @@
     aria-labelledby="importModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="importModalLabel">Import</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <ImportModalContent :hosts="modalHosts" />
-        </div>
-        <div class="modal-footer justify-content-center">
-          <button type="button" class="btn">DO IMPORT</button>
-        </div>
-      </div>
+    <div class="modal-dialog modal-dialog-scrollable">
+      <ImportModalContent :hosts="modalHosts" />
     </div>
   </div>
 </template>
@@ -105,19 +89,19 @@ export default defineComponent({
       },
     ];
     let checked: string[] = [];
+    let modalHosts: string[] = [];
     return {
       checkedAll: false,
       checked,
       hosts,
-      modalHosts: [],
+      modalHosts,
     };
   },
   methods: {
     checkAll() {
+      this.checked = [];
       if (this.checkedAll) {
         this.hosts.forEach((host) => this.checked.push(host.id));
-      } else {
-        this.checked = [];
       }
     },
   },

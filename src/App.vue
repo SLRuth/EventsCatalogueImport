@@ -2,13 +2,13 @@
   <div id="nav">
     <ul class="nav">
       <li class="nav-item px-2">
-        <router-link to="/imports" class="nav-link py-2 px-3">
+        <router-link to="/" class="nav-link py-2 px-3">
           Import hosts
         </router-link>
       </li>
       <li class="nav-item px-2">
         <router-link to="/entities" class="nav-link py-2 px-3">
-          Exported entities
+          Imported entities
         </router-link>
       </li>
     </ul>
