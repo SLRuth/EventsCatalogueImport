@@ -15,7 +15,7 @@
           <div class="fs-5 fw-bold">For the host: {{ host }}</div>
           <div class="py-2">Please select entity type:</div>
           <div
-            class="pb-3"
+            class="pb-2"
             v-bind:key="index"
             v-for="(type, index) in types"
             :value="type"
@@ -26,17 +26,28 @@
               :value="{ host, type }"
               v-model="selected"
             />
-            <label :for="type + host" class="px-2">{{ type }}</label>
-            <div v-if="progress" class="progress">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                :style="'width: ' + progressPercent + '%'"
-                :aria-valuenow="progressPercent"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                {{ progressPercent }}%
+            <label :for="type + host" class="fs-5 px-2">{{ type }}</label>
+            <div v-if="progress">
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  :style="'width: ' + progressPercent + '%'"
+                  :aria-valuenow="progressPercent"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  {{ progressPercent }}%
+                </div>
+              </div>
+              <div class="py-1">
+                <div class="text-start fs-6 fw-light fst-italic p-2 w-100">
+                  <div>Process</div>
+                  <div>Process</div>
+                  <div>Process</div>
+                  <div>Process</div>
+                  <div>Process</div>
+                </div>
               </div>
             </div>
           </div>
@@ -66,17 +77,6 @@
         <button v-else @click="cancelImport" type="button" class="btn">
           CANCEL
         </button>
-        <div class="py-4">
-          <div
-            class="bg-secondary text-white text-start fs-6 fw-light p-2 w-100"
-          >
-            <div>Process</div>
-            <div>Process</div>
-            <div>Process</div>
-            <div>Process</div>
-            <div>Process</div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
