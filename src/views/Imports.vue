@@ -1,8 +1,11 @@
 <template>
-  <div class="imports p-5">
-    <table class="table">
-      <thead>
-        <tr>
+  <div class="imports px-5 py-1">
+    <div class="text-start fs-4 fw-bold text-capitalize pb-2">
+      Remote Hosts for Import
+    </div>
+    <table class="table table-bordered">
+      <thead class="bg-orange">
+        <tr class="py-5">
           <th scope="col">
             <input
               type="checkbox"
@@ -112,6 +115,10 @@ export default defineComponent({
 .btn,
 .btn:hover {
   background-color: #ff6e0b;
+  color: white;
+}
+.bg-orange {
+  background-color: #f58d4e !important;
   color: white;
 }
 </style>

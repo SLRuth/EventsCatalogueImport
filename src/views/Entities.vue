@@ -1,15 +1,15 @@
 <template>
-  <div class="entities p-5">
+  <div class="entities px-5 py-1">
     <div
-      class="pb-5"
+      class="pb-2"
       v-bind:key="entityName"
       v-for="(entityData, entityName) in entities"
     >
-      <div class="text-start fs-4 fw-bold text-capitalize">
+      <div class="text-start fs-4 fw-bold text-capitalize pb-1">
         {{ entityName }}
       </div>
-      <table class="table">
-        <thead>
+      <table class="table table-bordered">
+        <thead class="bg-orange">
           <tr>
             <th
               scope="col"
@@ -69,3 +69,9 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.bg-orange {
+  background-color: #f58d4e !important;
+  color: white;
+}
+</style>
