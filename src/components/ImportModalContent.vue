@@ -13,7 +13,13 @@
             <label :for="type + host.name" class="fs-5 px-2">
               <input
                 type="checkbox"
-                :disabled="progress || (isSelectionFull && !selected.find(({ host: h, type: t }) => h == host.name && t == type))"
+                :disabled="
+                  progress ||
+                  (isSelectionFull &&
+                    !selected.find(
+                      ({ host: h, type: t }) => h == host.name && t == type
+                    ))
+                "
                 :id="type + host.name"
                 :value="{ host: host.name, type }"
                 v-model="selected"
@@ -25,7 +31,9 @@
                 <div
                   class="progress-bar"
                   role="progressbar"
-                  :style="'width: ' + progressTracker[host.id][type].progress + '%'"
+                  :style="
+                    'width: ' + progressTracker[host.id][type].progress + '%'
+                  "
                   :aria-valuenow="progressTracker[host.id][type].progress"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -54,6 +62,7 @@
 <script lang="ts">
 import { RemoteHost } from "@/entities/RemoteHost";
 import { RemoteHostSelection } from "@/entities/RemoteHostSelection";
+import { importEventSource } from "@/api/EntitiesAPI";
 import { defineComponent } from "vue";
 
 type ProgressRecord = {
@@ -102,9 +111,9 @@ export default defineComponent({
     },
   },
   methods: {
-    createTracker(id: number, url: string, type: string) {
+    createTracker(id: number, type: string) {
       this.progressTracker[id][type] = {
-        eventSource: new EventSource(url),
+        eventSource: importEventSource(id, type),
         label: "Fetching information..",
         progress: 0,
         finalized: false,
@@ -114,9 +123,9 @@ export default defineComponent({
       const source = this.progressTracker[host.id][type].eventSource;
       source.onmessage = (evt) => {
         const msg = JSON.parse(evt.data);
+        const label = msg.data?.title || msg.data?.name || "";
         switch (msg.type) {
           case "process":
-            let label = msg.data.title || msg.data.name;
             this.progressTracker[host.id][type].label =
               "Processing entity with title: " + label;
             this.progressTracker[host.id][type].progress = msg.process * 100;
@@ -153,21 +162,13 @@ export default defineComponent({
           eventExists = host.entities.length > entities.length;
 
         if (eventExists) {
-          this.createTracker(
-            host.id,
-            `/wp-content/plugins/importlogic/api/process/${host.id}?type=import&entity=event`,
-            "event"
-          );
+          this.createTracker(host.id, "event");
           promise = new Promise((res, _) =>
             this.runSource(host, "event", () => res(void 0))
           );
         }
         entities.forEach((type) => {
-          this.createTracker(
-            host.id,
-            `/wp-content/plugins/importlogic/api/process/${host.id}?type=import&entity=${type}`,
-            type
-          );
+          this.createTracker(host.id, type);
 
           if (promise)
             promise.then(() => {

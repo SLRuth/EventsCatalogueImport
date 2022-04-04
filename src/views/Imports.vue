@@ -1,11 +1,17 @@
 <template>
   <div class="imports px-5 py-1">
-    <div class="text-start fs-4 fw-bold text-capitalize pb-2">Remote Hosts for Import</div>
+    <div class="text-start fs-4 fw-bold text-capitalize pb-2">
+      Remote Hosts for Import
+    </div>
     <table class="table table-bordered">
       <thead class="bg-orange">
         <tr class="py-5">
           <th scope="col">
-            <input type="checkbox" v-model="checkedAll" @change="checkAll($event)" />
+            <input
+              type="checkbox"
+              v-model="checkedAll"
+              @change="checkAll($event)"
+            />
           </th>
           <th scope="col">Host</th>
           <th scope="col">Type</th>
@@ -28,7 +34,9 @@
               data-bs-toggle="modal"
               data-bs-target="#importModal"
               @click="modalHosts = [host]"
-            >Import</button>
+            >
+              Import
+            </button>
           </td>
         </tr>
       </tbody>
@@ -40,7 +48,9 @@
         data-bs-toggle="modal"
         data-bs-target="#importModal"
         @click="modalHosts = checked"
-      >Import all selected</button>
+      >
+        Import all selected
+      </button>
     </div>
   </div>
 
@@ -62,6 +72,7 @@
 import { defineComponent } from "vue";
 import ImportModalContent from "@/components/ImportModalContent.vue"; // @ is an alias to /src
 import { RemoteHost } from "@/entities/RemoteHost";
+import { fetchHosts } from "@/api/EntitiesAPI";
 
 export default defineComponent({
   name: "Imports",
@@ -75,6 +86,7 @@ export default defineComponent({
       checked,
       hosts,
       modalHosts,
+      showModal: false,
     };
   },
   methods: {
@@ -86,7 +98,7 @@ export default defineComponent({
     },
   },
   created() {
-    fetch("/wp-content/plugins/importlogic/api/remote_hosts")
+    fetchHosts()
       .then((response) => response.json())
       .then((hosts) => {
         this.hosts = hosts;

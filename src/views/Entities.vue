@@ -21,7 +21,11 @@
             <td
               v-bind:key="i"
               v-for="(prop, i) in data"
-              v-html="i == 'id' ? `<a href='/wp-admin/post.php?post=${prop}&action=edit'>${prop}</a>` : prop"
+              v-html="
+                i == 'id'
+                  ? `<a href='/wp-admin/post.php?post=${prop}&action=edit'>${prop}</a>`
+                  : prop
+              "
             ></td>
           </tr>
         </tbody>
@@ -32,6 +36,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { fetchEntities } from "@/api/EntitiesAPI";
 
 export default defineComponent({
   name: "Entities",
@@ -42,7 +47,7 @@ export default defineComponent({
     };
   },
   created() {
-    fetch("/wp-content/plugins/importlogic/api/process/entities")
+    fetchEntities()
       .then((r) => r.json())
       .then((entities) => (this.entities = entities))
       .then(console.log);
