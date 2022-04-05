@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:prod": "nodenv -E .env -e 'vue-cli-service build --mode production --dest $DEST_PATH'",
     "build:watch": "nodenv -E .env -e 'vue-cli-service build --watch --dest $DEST_PATH'",
     "lint": "vue-cli-service lint"
   },

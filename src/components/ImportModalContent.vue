@@ -1,32 +1,80 @@
 <template>
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="importModalLabel">Import</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <h5
+        class="modal-title"
+        v-if="isSelectionPhase"
+        id="importModalLabel"
+      >Select remote hosts to import from</h5>
+      <h5
+        class="modal-title"
+        v-else-if="isPreImportPhase"
+        id="importModalLabel"
+      >Please fill out the form below</h5>
+      <h5
+        class="modal-title"
+        v-else-if="finalized"
+        id="importModalLabel"
+      >Import finalized succesfully</h5>
+      <h5 class="modal-title" v-else id="importModalLabel">Importing, please wait...</h5>
+      <button
+        type="button"
+        @click="dispose"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
     </div>
     <div class="modal-body">
-      <div v-bind:key="index" v-for="(host, index) in hosts">
-        <div class="text-start">
-          <div class="fs-5 fw-bold" :class="progress ? 'pb-4' : ''">From the host: {{ host.name }}</div>
-          <div class="py-2" v-if="!progress">Please select entity type:</div>
-          <div class="pb-2" v-bind:key="index" v-for="(type, index) in host.entities" :value="type">
-            <label :for="type + host.name" class="fs-5 px-2">
-              <input
-                type="checkbox"
-                :disabled="
-                  progress ||
-                  (isSelectionFull &&
-                    !selected.find(
-                      ({ host: h, type: t }) => h == host.name && t == type
-                    ))
-                "
-                :id="type + host.name"
-                :value="{ host: host.name, type }"
-                v-model="selected"
-              />
-              {{ type.charAt(0).toUpperCase() + type.slice(1) }}
-            </label>
-            <div v-if="progress">
+      <template v-if="isSelectionPhase">
+        <div v-bind:key="index" v-for="(host, index) in availableHosts">
+          <div class="text-start">
+            <div class="fs-5 fw-bold">From the host: {{ host.name }}</div>
+            <div class="py-2">Please select entity type:</div>
+            <div
+              class="pb-2"
+              v-bind:key="index"
+              v-for="(type, index) in host.entities"
+              :value="type"
+            >
+              <label :for="type + host.name" class="fs-5 px-2">
+                <input
+                  type="checkbox"
+                  :id="type + host.name"
+                  :value="{ host: host.name, type }"
+                  v-model="selected"
+                />
+                {{ type.charAt(0).toUpperCase() + type.slice(1) }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-else-if="isPreImportPhase">
+        <div v-bind:key="index" v-for="(host, index) in preImportHosts">
+          <component v-bind:is="componentOf(host)" :host="host"></component>
+        </div>
+      </template>
+      <template v-else-if="isImportPhase">
+        <div v-bind:key="index" v-for="(host, index) in selectedHosts">
+          <div class="text-start">
+            <div class="fs-5 fw-bold pb-4">Importing entities from the host: {{ host.name }}</div>
+            <div
+              class="pb-2"
+              v-bind:key="index"
+              v-for="(type, index) in host.entities"
+              :value="type"
+            >
+              <label :for="type + host.name" class="fs-5 px-2">
+                <input
+                  type="checkbox"
+                  disabled="true"
+                  :id="type + host.name"
+                  :value="{ host: host.name, type }"
+                  v-model="selected"
+                />
+                {{ type.charAt(0).toUpperCase() + type.slice(1) }}
+              </label>
               <div class="progress">
                 <div
                   class="progress-bar"
@@ -47,12 +95,24 @@
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
     <div class="modal-footer justify-content-center">
       <div class="w-100">
         <button v-if="finalized" @click="dispose" type="button" class="btn">Go Back</button>
-        <button v-else-if="!progress" @click="doImport" type="button" class="btn">Import</button>
+        <button
+          v-else-if="isSelectionPhase"
+          :disabled="selected.length == 0"
+          @click="advance"
+          type="button"
+          class="btn"
+        >Next</button>
+        <button
+          v-else-if="isPreImportPhase"
+          @click="importFromSelectedHosts"
+          type="button"
+          class="btn"
+        >Import</button>
         <button v-else @click="cancelImport" type="button" class="btn">Cancel</button>
       </div>
     </div>
@@ -63,7 +123,9 @@
 import { RemoteHost } from "@/entities/RemoteHost";
 import { RemoteHostSelection } from "@/entities/RemoteHostSelection";
 import { importEventSource } from "@/api/EntitiesAPI";
-import { defineComponent } from "vue";
+import preStepsComponents from "@/config/PreImportSteps";
+import { defineAsyncComponent, defineComponent, PropType } from "vue";
+import preImportStepsTypeMapping from "@/config/PreImportSteps";
 
 type ProgressRecord = {
   eventSource: EventSource;
@@ -72,20 +134,31 @@ type ProgressRecord = {
   finalized: boolean;
 };
 type ProgressTracker = Record<number, Record<string, ProgressRecord>>;
+type ProcessPhase = "selection" | "pre-import" | "import";
+
+const dynamicComponents = Object.fromEntries(
+  Object.values(preImportStepsTypeMapping).map((name) => [
+    name,
+    defineAsyncComponent(() => import(`@/components/${name}`)),
+  ])
+);
 
 export default defineComponent({
   name: "ImportModalContent",
+  expose: ["dispose"],
   props: {
     msg: String,
-    allHosts: [Object],
+    show: Boolean,
+    allHosts: [Object] as PropType<RemoteHost[]>,
   },
   data() {
     return {
-      progress: false,
+      phase: "selection" as ProcessPhase,
       progressTracker: {} as ProgressTracker,
       selected: [],
     };
   },
+  components: dynamicComponents,
   computed: {
     finalized() {
       let trackers = Object.values(this.progressTracker).flatMap(
@@ -99,15 +172,36 @@ export default defineComponent({
     isSelectionFull() {
       return this.selected.length >= 8;
     },
-    hosts(): RemoteHost[] {
-      return this.progress
-        ? (this.allHosts ?? []).map((host: RemoteHost) => ({
-            ...host,
-            entities: this.selected
-              .filter((sl: RemoteHostSelection) => sl.host == host.name)
-              .map((sl: RemoteHostSelection) => sl.type),
-          }))
-        : this.allHosts;
+    isPreImportPhase() {
+      return this.phase == "pre-import";
+    },
+    isSelectionPhase() {
+      return this.phase == "selection";
+    },
+    isImportPhase() {
+      return this.phase == "import";
+    },
+    availableHosts(): RemoteHost[] {
+      return this.allHosts ?? [];
+    },
+    preImportHosts(): RemoteHost[] {
+      return (this.allHosts ?? []).filter((host) => !!this.componentOf(host));
+    },
+    selectedHosts(): RemoteHost[] {
+      return (this.allHosts ?? []).flatMap((host: RemoteHost) => {
+        const selectedEntities = this.selected
+          .filter((sl: RemoteHostSelection) => sl.host == host.name)
+          .map((sl: RemoteHostSelection) => sl.type);
+
+        if (selectedEntities.length == 0) return [];
+        else
+          return [
+            {
+              ...host,
+              entities: selectedEntities,
+            },
+          ];
+      });
     },
   },
   methods: {
@@ -153,9 +247,26 @@ export default defineComponent({
         if (cb) cb();
       };
     },
-    doImport() {
-      this.progress = true;
-      this.hosts.forEach((host: RemoteHost) => {
+    advance() {
+      if (this.phase == "selection" && this.preImportHosts.length != 0) {
+        this.phase = "pre-import";
+      } else if (this.phase == "selection" && this.preImportHosts.length == 0) {
+        this.phase = "import";
+        this.importFromSelectedHosts();
+      } else if (this.phase == "pre-import") {
+        this.phase = "import";
+      }
+    },
+    back() {
+      if (this.phase == "import" && this.preImportHosts.length != 0) {
+        this.phase = "pre-import";
+      } else {
+        this.phase = "selection";
+      }
+    },
+    importFromSelectedHosts() {
+      console.log(this.selectedHosts);
+      this.selectedHosts.forEach((host: RemoteHost) => {
         this.progressTracker[host.id] = {};
         let promise: Promise<void> | undefined = undefined;
         const entities = host.entities.filter((ent) => ent != "event"),
@@ -178,16 +289,26 @@ export default defineComponent({
         });
       });
     },
+    isSelected(host: RemoteHost, type: string) {
+      return this.selected.find(
+        ({ host: h, type: t }) => h == host.name && type == t
+      );
+    },
+    componentOf(host: RemoteHost) {
+      console.log(preStepsComponents[host.type]);
+      return preStepsComponents[host.type];
+    },
     cancelImport() {
       Object.values(this.progressTracker)
         .flatMap((t) => Object.values(t))
         .forEach((tracker) => {
           tracker.eventSource.close();
         });
-      this.progress = false;
+      this.back();
     },
     dispose() {
-      this.progress = false;
+      this.phase = "selection";
+      this.selected = [];
       this.progressTracker = {};
     },
   },

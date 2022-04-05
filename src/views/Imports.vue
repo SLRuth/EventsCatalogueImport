@@ -1,17 +1,11 @@
 <template>
   <div class="imports px-5 py-1">
-    <div class="text-start fs-4 fw-bold text-capitalize pb-2">
-      Remote Hosts for Import
-    </div>
+    <div class="text-start fs-4 fw-bold text-capitalize pb-2">Remote Hosts for Import</div>
     <table class="table table-bordered">
       <thead class="bg-orange">
         <tr class="py-5">
           <th scope="col">
-            <input
-              type="checkbox"
-              v-model="checkedAll"
-              @change="checkAll($event)"
-            />
+            <input type="checkbox" v-model="checkedAll" @change="checkAll($event)" />
           </th>
           <th scope="col">Host</th>
           <th scope="col">Type</th>
@@ -34,9 +28,7 @@
               data-bs-toggle="modal"
               data-bs-target="#importModal"
               @click="modalHosts = [host]"
-            >
-              Import
-            </button>
+            >Import</button>
           </td>
         </tr>
       </tbody>
@@ -48,22 +40,25 @@
         data-bs-toggle="modal"
         data-bs-target="#importModal"
         @click="modalHosts = checked"
-      >
-        Import all selected
-      </button>
+      >Import all selected</button>
     </div>
   </div>
 
   <!-- Modal -->
   <div
-    class="modal fade"
+    class="modal fade p-3"
     id="importModal"
     tabindex="-1"
     aria-labelledby="importModalLabel"
     aria-hidden="true"
+    @click="disposeModal"
   >
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-      <ImportModalContent :allHosts="modalHosts" />
+    <div
+      class="modal-dialog modal-dialog-scrollable modal-dialog-centered"
+      :class="modalHosts.length == 1 ? 'normal-modal-width' : 'w-50'"
+      @click.stop
+    >
+      <ImportModalContent :allHosts="modalHosts" ref="modal" />
     </div>
   </div>
 </template>
@@ -96,6 +91,11 @@ export default defineComponent({
         this.hosts.forEach((host) => this.checked.push(host));
       }
     },
+    disposeModal() {
+      const modal: any | undefined = this.$refs.modal;
+      console.log(modal);
+      modal?.dispose();
+    },
   },
   created() {
     fetchHosts()
@@ -119,5 +119,11 @@ export default defineComponent({
 .bg-orange {
   background-color: #f58d4e !important;
   color: white;
+}
+.modal-dialog {
+  max-width: unset !important;
+}
+.normal-modal-width {
+  width: 500px !important;
 }
 </style>
