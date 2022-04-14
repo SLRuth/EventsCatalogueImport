@@ -1,0 +1,60 @@
+Info 0    [01:35:36.731] Starting TS Server
+Info 1    [01:35:36.731] Version: 4.1.6
+Info 2    [01:35:36.731] Arguments: /usr/bin/node /home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/tsserver.js --logFile /home/syfers/Documents/Shocklogic/card-6044-import-frontend/.log/tsserver.log --logVerbosity info --cancellationPipeName /tmp/2a179b7dc21adc24f7316816274f29cc/tscancellation*
+Info 3    [01:35:36.731] Platform: linux NodeVersion: 17 CaseSensitive: true
+Info 4    [01:35:36.731] ServerMode: undefined syntaxOnly: false hasUnknownServerMode: undefined
+Info 5    [01:35:36.738] Format host information updated
+Info 6    [01:35:36.743] Search path: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/api
+Info 7    [01:35:36.744] For info: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/api/ProcessAPI.ts :: Config file name: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/tsconfig.json
+Info 8    [01:35:36.744] Opened configuration file /home/syfers/Documents/Shocklogic/card-6044-import-frontend/tsconfig.json
+Info 9    [01:35:36.764] Config: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/tsconfig.json : {
+ "rootNames": [
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/main.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/shims-vue.d.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/api/Constants.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/api/EntitiesAPI.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/api/ProcessAPI.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/config/PreImportSteps.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/RemoteHost.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/RemoteHostSelection.ts",
+  "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/router/index.ts"
+ ],
+ "options": {
+  "target": 99,
+  "module": 99,
+  "strict": true,
+  "jsx": 1,
+  "importHelpers": true,
+  "moduleResolution": 2,
+  "skipLibCheck": true,
+  "esModuleInterop": true,
+  "allowSyntheticDefaultImports": true,
+  "sourceMap": true,
+  "baseUrl": "/home/syfers/Documents/Shocklogic/card-6044-import-frontend",
+  "types": [
+   "webpack-env"
+  ],
+  "paths": {
+   "@/*": [
+    "src/*"
+   ]
+  },
+  "lib": [
+   "lib.esnext.d.ts",
+   "lib.dom.d.ts",
+   "lib.dom.iterable.d.ts",
+   "lib.scripthost.d.ts"
+  ],
+  "pathsBasePath": "/home/syfers/Documents/Shocklogic/card-6044-import-frontend",
+  "configFilePath": "/home/syfers/Documents/Shocklogic/card-6044-import-frontend/tsconfig.json"
+ }
+}
+Info 10   [01:35:36.769] Starting updateGraphWorker: Project: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/tsconfig.json
+Info 11   [01:35:37.768] Finishing updateGraphWorker: Project: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/tsconfig.json Version: 1 structureChanged: true Elapsed: 998.8916510045528ms
+Info 12   [01:35:37.768] Project '/home/syfers/Documents/Shocklogic/card-6044-import-frontend/tsconfig.json' (Configured)
+Info 13   [01:35:37.768] 	Files (68)
+
+Info 14   [01:35:37.768] -----------------------------------------------
+Info 15   [01:35:39.240] Before ensureProjectForOpenFiles:
+Info 16   [01:35:39.240] After ensureProjectForOpenFiles:
+Info 17   [01:35:39.240] got projects updated in background, updating diagnostics for /home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/api/ProcessAPI.ts

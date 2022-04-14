@@ -1,0 +1,20 @@
+[14:10:16.495] Global cache location '/home/syfers/.cache/typescript/4.1', safe file path '/home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/typingSafeList.json', types map path /home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/typesMap.json
+[14:10:16.496] Processing cache location '/home/syfers/.cache/typescript/4.1'
+[14:10:16.496] Trying to find '/home/syfers/.cache/typescript/4.1/package.json'...
+[14:10:16.496] Loaded content of '/home/syfers/.cache/typescript/4.1/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.585"}}
+[14:10:16.496] Loaded content of '/home/syfers/.cache/typescript/4.1/package-lock.json'
+[14:10:16.496] Finished processing cache location '/home/syfers/.cache/typescript/4.1'
+[14:10:16.496] Process id: 128150
+[14:10:16.496] NPM location: /usr/bin/npm (explicit '--npmLocation' not  provided)
+[14:10:16.496] validateDefaultNpmLocation: false
+[14:10:16.497] Npm config file: /home/syfers/.cache/typescript/4.1/package.json
+[14:10:16.497] Updating types-registry npm package...
+[14:10:16.497] Exec: /usr/bin/npm install --ignore-scripts types-registry@latest
+[14:10:22.455]     Succeeded. stdout:
+    
+    up to date, audited 2 packages in 6s
+
+found 0 vulnerabilities
+
+[14:10:22.455] Updated types-registry npm package
+[15:29:30.050] Parent process has exited, shutting down...

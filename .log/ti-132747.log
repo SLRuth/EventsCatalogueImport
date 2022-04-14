@@ -1,0 +1,31 @@
+[15:32:25.238] Global cache location '/home/syfers/.cache/typescript/4.1', safe file path '/home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/typingSafeList.json', types map path /home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/typesMap.json
+[15:32:25.238] Processing cache location '/home/syfers/.cache/typescript/4.1'
+[15:32:25.238] Trying to find '/home/syfers/.cache/typescript/4.1/package.json'...
+[15:32:25.239] Loaded content of '/home/syfers/.cache/typescript/4.1/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.585"}}
+[15:32:25.239] Loaded content of '/home/syfers/.cache/typescript/4.1/package-lock.json'
+[15:32:25.239] Finished processing cache location '/home/syfers/.cache/typescript/4.1'
+[15:32:25.239] Process id: 132765
+[15:32:25.239] NPM location: /usr/bin/npm (explicit '--npmLocation' not  provided)
+[15:32:25.239] validateDefaultNpmLocation: false
+[15:32:25.239] Npm config file: /home/syfers/.cache/typescript/4.1/package.json
+[15:32:25.240] Updating types-registry npm package...
+[15:32:25.240] Exec: /usr/bin/npm install --ignore-scripts types-registry@latest
+[15:32:31.990]     Succeeded. stdout:
+    
+    up to date, audited 2 packages in 7s
+
+found 0 vulnerabilities
+
+[15:32:31.990] Updated types-registry npm package
+[15:32:40.967] Got install request {"projectName":"/dev/null/inferredProject1*","fileNames":[],"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true},"typeAcquisition":{"enable":true,"include":[],"exclude":[]},"unresolvedImports":[],"projectRootPath":"/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities","kind":"discover"}
+[15:32:40.992] Loaded safelist from types map file '/home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/typesMap.json'
+[15:32:40.992] Explicitly included types: []
+[15:32:40.992] Inferred typings from unresolved imports: []
+[15:32:40.992] Result: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/bower_components","/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/node_modules"]}
+[15:32:40.992] Finished typings discovery: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/bower_components","/home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/node_modules"]}
+[15:32:40.992] DirectoryWatcher:: Added:: WatchInfo: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/bower_components
+[15:32:40.994] DirectoryWatcher:: Added:: WatchInfo: /home/syfers/Documents/Shocklogic/card-6044-import-frontend/src/entities/node_modules
+[15:32:40.994] Sending response:
+    {"projectName":"/dev/null/inferredProject1*","typeAcquisition":{"enable":true,"include":[],"exclude":[]},"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true},"typings":[],"unresolvedImports":[],"kind":"action::set"}
+[15:32:40.994] Response has been sent.
+[15:32:40.994] No new typings were requested as a result of typings discovery

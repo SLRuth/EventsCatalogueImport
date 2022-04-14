@@ -1,0 +1,18 @@
+[14:07:33.363] Global cache location '/home/syfers/.cache/typescript/4.1', safe file path '/home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/typingSafeList.json', types map path /home/syfers/Documents/Shocklogic/card-6044-import-frontend/node_modules/typescript/lib/typesMap.json
+[14:07:33.363] Processing cache location '/home/syfers/.cache/typescript/4.1'
+[14:07:33.363] Trying to find '/home/syfers/.cache/typescript/4.1/package.json'...
+[14:07:33.363] Finished processing cache location '/home/syfers/.cache/typescript/4.1'
+[14:07:33.363] Process id: 127805
+[14:07:33.363] NPM location: /usr/bin/npm (explicit '--npmLocation' not  provided)
+[14:07:33.363] validateDefaultNpmLocation: false
+[14:07:33.364] Npm config file: /home/syfers/.cache/typescript/4.1/package.json
+[14:07:33.364] Npm config file: '/home/syfers/.cache/typescript/4.1/package.json' is missing, creating new one...
+[14:07:33.364] Updating types-registry npm package...
+[14:07:33.364] Exec: /usr/bin/npm install --ignore-scripts types-registry@latest
+[14:07:51.564]     Succeeded. stdout:
+    
+    added 1 package, and audited 2 packages in 18s
+
+found 0 vulnerabilities
+
+[14:07:51.564] Updated types-registry npm package

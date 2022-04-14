@@ -52,7 +52,11 @@
       </template>
       <template v-else-if="isPreImportPhase">
         <div v-bind:key="index" v-for="(host, index) in preImportHosts">
-          <component v-bind:is="componentOf(host)" :host="host"></component>
+          <component
+            v-bind:is="componentOf(host)"
+            :host="host"
+            @finalized="notifyFinalized(host, $event)"
+          ></component>
         </div>
       </template>
       <template v-else-if="isImportPhase">
@@ -109,7 +113,8 @@
         >Next</button>
         <button
           v-else-if="isPreImportPhase"
-          @click="importFromSelectedHosts"
+          @click="advance"
+          :disabled="!isPreImportReady"
           type="button"
           class="btn"
         >Import</button>
@@ -122,10 +127,10 @@
 <script lang="ts">
 import { RemoteHost } from "@/entities/RemoteHost";
 import { RemoteHostSelection } from "@/entities/RemoteHostSelection";
-import { importEventSource } from "@/api/EntitiesAPI";
 import preStepsComponents from "@/config/PreImportSteps";
 import { defineAsyncComponent, defineComponent, PropType } from "vue";
 import preImportStepsTypeMapping from "@/config/PreImportSteps";
+import { importEventSource } from "@/api/ProcessAPI";
 
 type ProgressRecord = {
   eventSource: EventSource;
@@ -134,6 +139,8 @@ type ProgressRecord = {
   finalized: boolean;
 };
 type ProgressTracker = Record<number, Record<string, ProgressRecord>>;
+type PreImportStepHostTracker = Record<number, boolean>;
+type ProcessURLPreparer = Record<number, (url: string) => string>;
 type ProcessPhase = "selection" | "pre-import" | "import";
 
 const dynamicComponents = Object.fromEntries(
@@ -156,6 +163,8 @@ export default defineComponent({
       phase: "selection" as ProcessPhase,
       progressTracker: {} as ProgressTracker,
       selected: [],
+      preImportStepHostTracker: {} as PreImportStepHostTracker,
+      processUrlPreparer: {} as ProcessURLPreparer,
     };
   },
   components: dynamicComponents,
@@ -167,6 +176,11 @@ export default defineComponent({
 
       return (
         trackers.length > 0 && trackers.every((tracker) => tracker.finalized)
+      );
+    },
+    isPreImportReady() {
+      return Object.values(this.preImportStepHostTracker).every(
+        (finalized) => finalized
       );
     },
     isSelectionFull() {
@@ -185,7 +199,7 @@ export default defineComponent({
       return this.allHosts ?? [];
     },
     preImportHosts(): RemoteHost[] {
-      return (this.allHosts ?? []).filter((host) => !!this.componentOf(host));
+      return this.selectedHosts.filter((host) => !!this.componentOf(host));
     },
     selectedHosts(): RemoteHost[] {
       return (this.allHosts ?? []).flatMap((host: RemoteHost) => {
@@ -207,7 +221,7 @@ export default defineComponent({
   methods: {
     createTracker(id: number, type: string) {
       this.progressTracker[id][type] = {
-        eventSource: importEventSource(id, type),
+        eventSource: importEventSource(id, type, this.processUrlPreparer[id]),
         label: "Fetching information..",
         progress: 0,
         finalized: false,
@@ -250,22 +264,24 @@ export default defineComponent({
     advance() {
       if (this.phase == "selection" && this.preImportHosts.length != 0) {
         this.phase = "pre-import";
+        this.preparePreImport();
       } else if (this.phase == "selection" && this.preImportHosts.length == 0) {
         this.phase = "import";
         this.importFromSelectedHosts();
       } else if (this.phase == "pre-import") {
         this.phase = "import";
+        this.importFromSelectedHosts();
       }
     },
     back() {
       if (this.phase == "import" && this.preImportHosts.length != 0) {
         this.phase = "pre-import";
+        this.preparePreImport();
       } else {
         this.phase = "selection";
       }
     },
     importFromSelectedHosts() {
-      console.log(this.selectedHosts);
       this.selectedHosts.forEach((host: RemoteHost) => {
         this.progressTracker[host.id] = {};
         let promise: Promise<void> | undefined = undefined;
@@ -275,7 +291,7 @@ export default defineComponent({
         if (eventExists) {
           this.createTracker(host.id, "event");
           promise = new Promise((res, _) =>
-            this.runSource(host, "event", () => res(void 0))
+            this.runSource(host, "event", () => setTimeout(() => res(), 150))
           );
         }
         entities.forEach((type) => {
@@ -305,6 +321,16 @@ export default defineComponent({
           tracker.eventSource.close();
         });
       this.back();
+    },
+    preparePreImport() {
+      this.preImportStepHostTracker = Object.fromEntries(
+        this.preImportHosts.map((host) => [host.id, false])
+      );
+    },
+    notifyFinalized(host: RemoteHost, searchParams: URLSearchParams) {
+      this.processUrlPreparer[host.id] = (url: string) =>
+        url + "&" + searchParams;
+      this.preImportStepHostTracker[host.id] = true;
     },
     dispose() {
       this.phase = "selection";
